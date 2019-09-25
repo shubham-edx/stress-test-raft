@@ -66,7 +66,7 @@ services:
                 condition: on-failure
             placement:
                 constraints:
-                    - node.hostname == subham-H310M-H-2-0
+                    - node.hostname == ip-172-31-41-242
         ports:
             - published: 7050
               target: 7050
@@ -121,7 +121,7 @@ services:
                 condition: on-failure
             placement:
                 constraints:
-                    - node.hostname == subham-H310M-H-2-0
+                    - node.hostname == ip-172-31-41-242
         ports:
             - published: 8050
               target: 7050
@@ -176,7 +176,7 @@ services:
                 condition: on-failure
             placement:
                 constraints:
-                    - node.hostname == subham-H310M-H-2-0
+                    - node.hostname == ip-172-31-41-242
         ports:
             - published: 9050
               target: 7050

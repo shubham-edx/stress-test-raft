@@ -1,0 +1,187 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: "3.4"
+
+volumes:
+    orderer0.example.com:
+    orderer1.example.com:
+    orderer2.example.com:
+
+networks:
+    bymn:
+        external:
+            name: fabric
+
+services:
+    orderer0:
+        image: hyperledger/fabric-orderer:1.4.2
+        environment:
+            - ORDERER_HOST=orderer0.example.com
+            - ORDERER_HOME=/var/hyperledger/orderer
+            - ORDERER_GENERAL_LOGLEVEL=debug
+            - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/msp
+            - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+            - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+            - ORDERER_GENERAL_LISTENPORT=7050
+            - ORDERER_GENERAL_LEDGERTYPE=ram
+            - ORDERER_GENERAL_GENESISMETHOD=file
+            - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/configs/genesis.block
+            # - CONFIGTX_ORDERER_ORDERERTYPE=solo
+            - CONFIGTX_ORDERER_BATCHSIZE_MAXMESSAGECOUNT=20
+            - CONFIGTX_ORDERER_BATCHTIMEOUT=2s
+            - CONFIGTX_ORDERER_ADDRESSES=[127.0.0.1:7050]
+            # TLS settings
+            - ORDERER_GENERAL_TLS_ENABLED=true
+            - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/tls/server.key
+            - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/tls/server.crt
+            - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+            #- ORDERER_TLS_CLIENTAUTHREQUIRED=false
+            - ORDERER_TLS_CLIENTROOTCAS_FILES=/var/hyperledger/users/Admin@example.com/tls/ca.crt
+            - ORDERER_TLS_CLIENTCERT_FILE=/var/hyperledger/users/Admin@example.com/tls/client.crt
+            - ORDERER_TLS_CLIENTKEY_FILE=/var/hyperledger/users/Admin@example.com/tls/client.key
+            # newly added stuff
+            - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/tls/server.crt
+            - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/tls/server.key
+            - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+        working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+        command: orderer
+        volumes:
+            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/msp:/var/hyperledger/msp
+            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls:/var/hyperledger/tls
+            - ../channel-artifacts/:/var/hyperledger/configs
+            - ../crypto-config/ordererOrganizations/example.com/users:/var/hyperledger/users
+            - orderer0.example.com:/var/hyperledger/production/orderer
+        deploy:
+            mode: replicated
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+            placement:
+                constraints:
+                    - node.hostname == subham-H310M-H-2-0
+        ports:
+            - published: 7050
+              target: 7050
+              mode: host
+        networks:
+            bymn:
+                aliases:
+                    - orderer0.example.com
+
+    orderer1:
+        image: hyperledger/fabric-orderer:1.4.2
+        environment:
+            - ORDERER_HOST=orderer1.example.com
+            - ORDERER_HOME=/var/hyperledger/orderer
+            - ORDERER_GENERAL_LOGLEVEL=debug
+            - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/msp
+            - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+            - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+            - ORDERER_GENERAL_LISTENPORT=7050
+            - ORDERER_GENERAL_LEDGERTYPE=ram
+            - ORDERER_GENERAL_GENESISMETHOD=file
+            - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/configs/genesis.block
+            # - CONFIGTX_ORDERER_ORDERERTYPE=solo
+            - CONFIGTX_ORDERER_BATCHSIZE_MAXMESSAGECOUNT=20
+            - CONFIGTX_ORDERER_BATCHTIMEOUT=2s
+            - CONFIGTX_ORDERER_ADDRESSES=[127.0.0.1:7050]
+            # TLS settings
+            - ORDERER_GENERAL_TLS_ENABLED=true
+            - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/tls/server.key
+            - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/tls/server.crt
+            - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+            #- ORDERER_TLS_CLIENTAUTHREQUIRED=false
+            - ORDERER_TLS_CLIENTROOTCAS_FILES=/var/hyperledger/users/Admin@example.com/tls/ca.crt
+            - ORDERER_TLS_CLIENTCERT_FILE=/var/hyperledger/users/Admin@example.com/tls/client.crt
+            - ORDERER_TLS_CLIENTKEY_FILE=/var/hyperledger/users/Admin@example.com/tls/client.key
+            # newly added stuff
+            - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/tls/server.crt
+            - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/tls/server.key
+            - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+        working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+        command: orderer
+        volumes:
+            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/msp:/var/hyperledger/msp
+            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls:/var/hyperledger/tls
+            - ../channel-artifacts/:/var/hyperledger/configs
+            - ../crypto-config/ordererOrganizations/example.com/users:/var/hyperledger/users
+            - orderer1.example.com:/var/hyperledger/production/orderer
+        deploy:
+            mode: replicated
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+            placement:
+                constraints:
+                    - node.hostname == subham-H310M-H-2-0
+        ports:
+            - published: 8050
+              target: 7050
+              mode: host
+        networks:
+            bymn:
+                aliases:
+                    - orderer1.example.com
+
+    orderer2:
+        image: hyperledger/fabric-orderer:1.4.2
+        environment:
+            - ORDERER_HOST=orderer2.example.com
+            - ORDERER_HOME=/var/hyperledger/orderer
+            - ORDERER_GENERAL_LOGLEVEL=debug
+            - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/msp
+            - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+            - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+            - ORDERER_GENERAL_LISTENPORT=7050
+            - ORDERER_GENERAL_LEDGERTYPE=ram
+            - ORDERER_GENERAL_GENESISMETHOD=file
+            - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/configs/genesis.block
+            # - CONFIGTX_ORDERER_ORDERERTYPE=solo
+            - CONFIGTX_ORDERER_BATCHSIZE_MAXMESSAGECOUNT=20
+            - CONFIGTX_ORDERER_BATCHTIMEOUT=2s
+            - CONFIGTX_ORDERER_ADDRESSES=[127.0.0.1:7050]
+            # TLS settings
+            - ORDERER_GENERAL_TLS_ENABLED=true
+            - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/tls/server.key
+            - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/tls/server.crt
+            - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+            #- ORDERER_TLS_CLIENTAUTHREQUIRED=false
+            - ORDERER_TLS_CLIENTROOTCAS_FILES=/var/hyperledger/users/Admin@example.com/tls/ca.crt
+            - ORDERER_TLS_CLIENTCERT_FILE=/var/hyperledger/users/Admin@example.com/tls/client.crt
+            - ORDERER_TLS_CLIENTKEY_FILE=/var/hyperledger/users/Admin@example.com/tls/client.key
+            # newly added stuff
+            - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/tls/server.crt
+            - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/tls/server.key
+            - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/tls/ca.crt]
+        working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+        command: orderer
+        volumes:
+            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/msp:/var/hyperledger/msp
+            - ../crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls:/var/hyperledger/tls
+            - ../channel-artifacts/:/var/hyperledger/configs
+            - ../crypto-config/ordererOrganizations/example.com/users:/var/hyperledger/users
+            - orderer2.example.com:/var/hyperledger/production/orderer
+        deploy:
+            mode: replicated
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+            placement:
+                constraints:
+                    - node.hostname == subham-H310M-H-2-0
+        ports:
+            - published: 9050
+              target: 7050
+              mode: host
+        networks:
+            bymn:
+                aliases:
+                    - orderer2.example.com

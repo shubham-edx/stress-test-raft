@@ -59,19 +59,13 @@ Organizations:
           Admins:
               Type: Signature
               Rule: "OR('Org3MSP.admin')"
-
 Capabilities:
     Channel: &ChannelCapabilities
-        V1_4_2: true
         V1_3: true
     Orderer: &OrdererCapabilities
-        V1_4_2: true
         V1_1: true
     Application: &ApplicationCapabilities
-        V1_4_2: true
         V1_3: true
-        V1_2: false
-        V1_1: false
 
 Application: &ApplicationDefaults
     Organizations:
@@ -100,12 +94,7 @@ Orderer: &OrdererDefaults
         MaxMessageCount: 10
         AbsoluteMaxBytes: 99 MB
         PreferredMaxBytes: 512 KB
-    Kafka:
-        Brokers:
-            - kafka0:9092
-            - kafka1:9092
-            - kafka2:9092
-            - kafka3:9092
+
     EtcdRaft:
         # The set of Raft replicas for this network. For the etcd/raft-based
         # implementation, we expect every replica to also be an OSN. Therefore,
@@ -155,19 +144,6 @@ Channel: &ChannelDefaults
         <<: *ChannelCapabilities
 
 Profiles:
-    TwoOrgsOrdererGenesis:
-        <<: *ChannelDefaults
-        Orderer:
-            <<: *OrdererDefaults
-            Organizations:
-                - *OrdererOrg
-            Capabilities:
-                <<: *OrdererCapabilities
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                    - *Org1
-                    - *Org2
     TwoOrgsChannel:
         Consortium: SampleConsortium
         Application:
@@ -178,6 +154,15 @@ Profiles:
                 - *Org3
             Capabilities:
                 <<: *ApplicationCapabilities
+
+    ChannelAll:
+        Consortium: SampleConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *Org1
+                - *Org2
+                - *Org3
 
     SampleMultiNodeEtcdRaft:
         <<: *ChannelDefaults
@@ -219,3 +204,4 @@ Profiles:
                 Organizations:
                     - *Org1
                     - *Org2
+                    - *Org3

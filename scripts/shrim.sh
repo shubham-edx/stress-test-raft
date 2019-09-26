@@ -1,6 +1,6 @@
 # this script will installe the chaincode and instantiate it.
 
-peer channel create -o orderer0.example.com:7050 -c channelall -f ../channel-artifacts/channelall.tx
+peer channel create -o orderer0.example.com:7050 -c channelall -f ../channel-artifacts/channelall.tx  --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer0.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 
 peer channel join -b channelall.block -o orderer0.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer0.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 

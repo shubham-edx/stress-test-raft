@@ -53,7 +53,7 @@ services:
       - CORE_LOGGING_GOSSIP=WARNING
       # TLS settings
       - CORE_PEER_TLS_ENABLED=true
-      - CORE_PEER_TLS_CLIENTAUTHREQUIRED=false
+      - CORE_PEER_TLS_CLIENTAUTHREQUIRED=true
       - CORE_PEER_TLS_CERT_FILE=/var/hyperledger/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/var/hyperledger/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/tls/ca.crt
